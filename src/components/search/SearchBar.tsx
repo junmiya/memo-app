@@ -8,7 +8,7 @@ interface SearchBarProps {
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
-  placeholder = "メモを検索...",
+  placeholder = "カードを検索...",
   className = ""
 }) => {
   const dispatch = useAppDispatch();

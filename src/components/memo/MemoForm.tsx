@@ -86,7 +86,7 @@ const MemoForm: React.FC<MemoFormProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={memo ? 'メモを編集' : '新しいメモ'}
+      title={memo ? 'カードを編集' : '新しいカード'}
       size="lg"
     >
       <form onSubmit={handleSubmit} className="space-y-6">

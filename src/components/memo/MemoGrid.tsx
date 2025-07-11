@@ -73,9 +73,9 @@ const MemoGrid: React.FC<MemoGridProps> = ({
     return (
       <div className="flex-1 flex items-center justify-center">
         <EmptyState
-          title="メモがありません"
-          description="最初のメモを作成して、アイデアを記録しましょう"
-          actionLabel="新しいメモを作成"
+          title="カードがありません"
+          description="最初のカードを作成して、単語を覚えましょう"
+          actionLabel="新しいカードを作成"
           onAction={onCreateMemo}
           icon={
             <div className="w-16 h-16 mx-auto mb-4">
@@ -100,7 +100,7 @@ const MemoGrid: React.FC<MemoGridProps> = ({
       <div className="mb-6">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-900">
-            メモ一覧 ({memos.length}件)
+            カード一覧 ({memos.length}件)
             {(hasActiveSearch || hasActiveFilters) && stats.total !== memos.length && (
               <span className="text-sm text-gray-500 font-normal ml-2">
                 / 全{stats.total}件

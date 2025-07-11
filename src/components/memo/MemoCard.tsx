@@ -22,7 +22,7 @@ const MemoCard: React.FC<MemoCardProps> = ({ memo, onEdit, onDelete }) => {
 
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (window.confirm('このメモを削除しますか？')) {
+    if (window.confirm('このカードを削除しますか？')) {
       onDelete(memo.id);
     }
   };

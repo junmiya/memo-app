@@ -30,7 +30,7 @@ const SearchHeader: React.FC<SearchHeaderProps> = ({ className = "" }) => {
         <div className="flex flex-col lg:flex-row lg:items-center gap-4 mb-4">
           {/* 検索バー */}
           <div className="flex-1 max-w-md">
-            <SearchBar placeholder="メモを検索..." />
+            <SearchBar placeholder="カードを検索..." />
           </div>
 
           {/* ソート＆フィルターコントロール */}

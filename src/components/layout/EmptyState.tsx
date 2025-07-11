@@ -10,9 +10,9 @@ interface EmptyStateProps {
 }
 
 const EmptyState: React.FC<EmptyStateProps> = ({
-  title = 'メモがありません',
-  description = '最初のメモを作成してみましょう',
-  actionLabel = '新しいメモを作成',
+  title = 'カードがありません',
+  description = '最初のカードを作成してみましょう',
+  actionLabel = '新しいカードを作成',
   onAction,
   icon,
 }) => {

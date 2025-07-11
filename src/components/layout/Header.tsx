@@ -14,8 +14,8 @@ const Header: React.FC<HeaderProps> = ({ onCreateMemo, memoCount = 0 }) => {
           {/* ロゴとタイトル */}
           <div className="flex items-center">
             <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-              <span className="mr-2">📝</span>
-              メモアプリ
+              <span className="mr-2">🎴</span>
+              かるたカード
             </h1>
             {memoCount > 0 && (
               <span className="ml-3 px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
@@ -30,7 +30,7 @@ const Header: React.FC<HeaderProps> = ({ onCreateMemo, memoCount = 0 }) => {
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
-              新しいメモ
+              新しいカード
             </Button>
           </div>
         </div>
