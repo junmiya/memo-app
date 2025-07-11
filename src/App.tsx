@@ -8,7 +8,7 @@ import MemoGrid from './components/memo/MemoGrid';
 import MemoForm from './components/memo/MemoForm';
 import { useMemos } from './hooks/useMemos';
 import { useAppSelector } from './hooks/redux';
-import { selectIsFormOpen, selectSelectedMemo } from './store';
+import { selectIsFormOpen } from './store';
 import { MemoFormData } from './types';
 
 // メインアプリケーションコンポーネント

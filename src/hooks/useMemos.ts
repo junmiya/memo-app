@@ -55,7 +55,7 @@ export const useMemos = () => {
   }, [dispatch]);
 
   // メモ更新
-  const editMemo = useCallback(async (id: string, updates: Partial<CreateMemoData>) => {
+  const editMemo = useCallback(async (_memoId: string, updates: Partial<CreateMemoData>) => {
     try {
       const currentMemo = selectedMemo;
       if (!currentMemo) {

@@ -20,7 +20,7 @@ export interface BaseComponentProps {
 
 // イベントハンドラー型
 export interface MemoEventHandlers {
-  onEdit: (memo: Memo) => void;
+  onEdit: (memo: import('./memo').Memo) => void;
   onDelete: (id: string) => void;
   onCreate: () => void;
 }

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Memo, MemoState, CreateMemoData, UpdateMemoData } from '../../types';
+import { Memo, MemoState } from '../../types';
 
 const initialState: MemoState = {
   items: [],

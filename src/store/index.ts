@@ -29,6 +29,12 @@ export {
   resetUI,
 } from './slices/uiSlice';
 
+// 型定義を先に
+export interface RootState {
+  memos: ReturnType<typeof memoReducer>;
+  ui: ReturnType<typeof uiReducer>;
+}
+
 export const store = configureStore({
   reducer: {
     memos: memoReducer,
@@ -45,7 +51,6 @@ export const store = configureStore({
   devTools: process.env.NODE_ENV !== 'production',
 });
 
-export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 // 型安全なセレクター
@@ -74,10 +79,10 @@ export const selectFilteredAndSortedMemos = (state: RootState) => {
   let filteredMemos = memos;
   if (searchQuery) {
     const query = searchQuery.toLowerCase();
-    filteredMemos = memos.filter(memo =>
+    filteredMemos = memos.filter((memo: any) =>
       memo.frontContent.toLowerCase().includes(query) ||
       memo.backContent.toLowerCase().includes(query) ||
-      memo.tags?.some(tag => tag.toLowerCase().includes(query))
+      memo.tags?.some((tag: string) => tag.toLowerCase().includes(query))
     );
   }
 
@@ -105,5 +110,5 @@ export const selectFilteredAndSortedMemos = (state: RootState) => {
 
 export const selectSelectedMemo = (state: RootState) => {
   const selectedId = selectSelectedMemoId(state);
-  return selectedId ? selectMemos(state).find(memo => memo.id === selectedId) : null;
+  return selectedId ? selectMemos(state).find((memo: any) => memo.id === selectedId) : null;
 };

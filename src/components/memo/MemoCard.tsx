@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Memo } from '../../types';
-import Button from '../ui/Button';
 import { formatRelativeTime, truncateText } from '../../utils/memo';
 
 interface MemoCardProps {

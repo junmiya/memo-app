@@ -7,7 +7,9 @@
       "Bash(pkill:*)",
       "Bash(curl:*)",
       "Bash(mkdir:*)",
-      "WebFetch(domain:qiita.com)"
+      "WebFetch(domain:qiita.com)",
+      "Bash(npm run build:*)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }

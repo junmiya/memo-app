@@ -35,8 +35,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
   // 利用可能なタグを取得
   const availableTags = React.useMemo(() => {
     const tagSet = new Set<string>();
-    memos.forEach(memo => {
-      memo.tags?.forEach(tag => tagSet.add(tag));
+    memos.forEach((memo: any) => {
+      memo.tags?.forEach((tag: string) => tagSet.add(tag));
     });
     return Array.from(tagSet).sort();
   }, [memos]);
@@ -44,7 +44,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
   // 利用可能な色を取得
   const availableColors = React.useMemo(() => {
     const colorSet = new Set<string>();
-    memos.forEach(memo => {
+    memos.forEach((memo: any) => {
       if (memo.color) colorSet.add(memo.color);
     });
     return MEMO_COLORS.filter(color => colorSet.has(color));

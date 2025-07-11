@@ -1,5 +1,4 @@
 import { Middleware } from '@reduxjs/toolkit';
-import { RootState } from '../index';
 
 const STORAGE_KEY = 'memo-app-data';
 
@@ -37,13 +36,13 @@ const localStorageUtils = {
 };
 
 // ローカルストレージミドルウェア
-export const localStorageMiddleware: Middleware<{}, RootState> = (store) => (next) => (action) => {
+export const localStorageMiddleware: Middleware = (store) => (next) => (action: any) => {
   const result = next(action);
   
   // メモ関連のアクションの場合、ローカルストレージに保存
   if (action.type.startsWith('memos/')) {
     const state = store.getState();
-    const memosToSave = state.memos.items.map(memo => ({
+    const memosToSave = state.memos.items.map((memo: any) => ({
       ...memo,
       // Dateオブジェクトを文字列に変換
       createdAt: memo.createdAt instanceof Date ? memo.createdAt.toISOString() : memo.createdAt,
