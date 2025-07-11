@@ -9,7 +9,10 @@
       "Bash(mkdir:*)",
       "WebFetch(domain:qiita.com)",
       "Bash(npm run build:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git remote add:*)",
+      "Bash(git branch:*)"
     ],
     "deny": []
   }

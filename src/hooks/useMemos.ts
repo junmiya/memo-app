@@ -15,6 +15,7 @@ import {
 import { openCreateForm, openEditForm, closeForm } from '../store/slices/uiSlice';
 import { LocalStorageManager } from '../utils/localStorage';
 import { createMemo as createMemoUtil, updateMemo as updateMemoUtil } from '../utils/memo';
+import { initializeSampleData } from '../utils/sampleData';
 import { Memo, CreateMemoData } from '../types';
 
 /**
@@ -33,6 +34,10 @@ export const useMemos = () => {
   const loadMemos = useCallback(async () => {
     try {
       dispatch(setLoading(true));
+      
+      // サンプルデータを初期化（初回のみ）
+      initializeSampleData();
+      
       const savedMemos = LocalStorageManager.load();
       dispatch(setMemos(savedMemos));
     } catch (error) {
