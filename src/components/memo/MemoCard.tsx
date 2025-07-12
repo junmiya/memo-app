@@ -85,41 +85,43 @@ const MemoCard: React.FC<MemoCardProps> = ({ memo, onEdit, onDelete }) => {
             )}
           </div>
 
-          {/* メタ情報と操作ボタン */}
-          <div className="mt-3">
-            <div className="flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity">
+          {/* タグ表示（常時表示） */}
+          {memo.tags && memo.tags.length > 0 && (
+            <div className="mt-3 flex justify-end">
               <div className="flex space-x-1">
-                <button
-                  onClick={handleEditClick}
-                  className="text-xs bg-white/20 hover:bg-white/30 px-2 py-1 rounded transition-colors"
-                >
-                  編集
-                </button>
-                <button
-                  onClick={handleDeleteClick}
-                  className="text-xs bg-white/20 hover:bg-white/30 px-2 py-1 rounded transition-colors"
-                >
-                  削除
-                </button>
+                {(() => {
+                  // 決まり字数のタグを優先的に表示
+                  const kimarijiTags = memo.tags.filter((tag: string) => tag.startsWith('決まり字:') && tag.includes('文字'));
+                  const otherTags = memo.tags.filter((tag: string) => !tag.startsWith('決まり字:') && tag !== '百人一首');
+                  const displayTags = [...kimarijiTags, ...otherTags].slice(0, 2);
+                  
+                  return displayTags.map((tag: string, index: number) => (
+                    <span key={index} className={`text-xs px-1 py-0.5 rounded ${
+                      tag.includes('文字') ? 'bg-red-200/30 text-red-100 border border-red-300/50' : 'bg-white/20'
+                    }`}>
+                      #{tag}
+                    </span>
+                  ));
+                })()}
               </div>
-              {memo.tags && memo.tags.length > 0 && (
-                <div className="flex space-x-1">
-                  {(() => {
-                    // 決まり字数のタグを優先的に表示
-                    const kimarijiTags = memo.tags.filter((tag: string) => tag.startsWith('決まり字:') && tag.includes('文字'));
-                    const otherTags = memo.tags.filter((tag: string) => !tag.startsWith('決まり字:') && tag !== '百人一首');
-                    const displayTags = [...kimarijiTags, ...otherTags].slice(0, 2);
-                    
-                    return displayTags.map((tag: string, index: number) => (
-                      <span key={index} className={`text-xs px-1 py-0.5 rounded ${
-                        tag.includes('文字') ? 'bg-red-200/30 text-red-100 border border-red-300/50' : 'bg-white/20'
-                      }`}>
-                        #{tag}
-                      </span>
-                    ));
-                  })()}
-                </div>
-              )}
+            </div>
+          )}
+
+          {/* 操作ボタン（ホバー時表示） */}
+          <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="flex space-x-1">
+              <button
+                onClick={handleEditClick}
+                className="text-xs bg-white/20 hover:bg-white/30 px-2 py-1 rounded transition-colors"
+              >
+                編集
+              </button>
+              <button
+                onClick={handleDeleteClick}
+                className="text-xs bg-white/20 hover:bg-white/30 px-2 py-1 rounded transition-colors"
+              >
+                削除
+              </button>
             </div>
           </div>
         </div>
