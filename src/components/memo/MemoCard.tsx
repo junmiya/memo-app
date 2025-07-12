@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Memo } from '../../types';
-import { formatRelativeTime } from '../../utils/memo';
 
 interface MemoCardProps {
   memo: Memo;
@@ -88,9 +87,6 @@ const MemoCard: React.FC<MemoCardProps> = ({ memo, onEdit, onDelete }) => {
 
           {/* メタ情報と操作ボタン */}
           <div className="mt-3">
-            <div className="text-xs opacity-75 mb-2">
-              {formatRelativeTime(memo.updatedAt)}
-            </div>
             <div className="flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity">
               <div className="flex space-x-1">
                 <button
@@ -156,9 +152,6 @@ const MemoCard: React.FC<MemoCardProps> = ({ memo, onEdit, onDelete }) => {
 
           {/* メタ情報と操作ボタン */}
           <div className="mt-3">
-            <div className="text-xs opacity-75 mb-2">
-              作成: {formatRelativeTime(memo.createdAt)}
-            </div>
             <div className="flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity">
               <div className="flex space-x-1">
                 <button
