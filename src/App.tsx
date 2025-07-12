@@ -1,6 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { store } from './store';
+import { AuthProvider } from './components/auth/AuthProvider';
 import Layout from './components/layout/Layout';
 import Header from './components/layout/Header';
 import SearchHeader from './components/search/SearchHeader';
@@ -93,7 +94,9 @@ const AppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <Provider store={store}>
-      <AppContent />
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </Provider>
   );
 };
