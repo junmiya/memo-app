@@ -717,8 +717,8 @@ export const createSampleMemos = (): Memo[] => {
   return allSampleData.map((data, index) => ({
     id: uuidv4(),
     ...data,
-    createdAt: new Date(now.getTime() - (allSampleData.length - index) * 60000), // 1分間隔で過去に作成
-    updatedAt: new Date(now.getTime() - (allSampleData.length - index) * 60000),
+    createdAt: new Date(now.getTime() - index * 60000), // 1番が最新、100番が最古になるよう設定
+    updatedAt: new Date(now.getTime() - index * 60000),
   }));
 };
 
