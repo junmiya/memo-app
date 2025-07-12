@@ -65,9 +65,25 @@ const MemoCard: React.FC<MemoCardProps> = ({ memo, onEdit, onDelete }) => {
           
           {/* 表面コンテンツ - 中央配置・大きなフォント */}
           <div className="flex-1 flex items-center justify-center">
-            <div className="text-4xl font-bold text-center leading-tight">
-              {memo.frontContent ? memo.frontContent : 'English'}
-            </div>
+            {memo.tags?.includes('百人一首') ? (
+              /* 百人一首用レイアウト: 上段ふりがな・中段句・下段作者 */
+              <div className="text-center w-full space-y-2">
+                {memo.frontContent.split('\n').map((line, index) => (
+                  <div key={index} className={
+                    index === 0 ? "text-lg text-opacity-80" :   // ふりがな
+                    index === 1 ? "text-2xl font-bold" :        // 句
+                    "text-base font-medium text-opacity-90"     // 作者
+                  }>
+                    {line}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              /* 英検4級用レイアウト: 中央大きな文字 */
+              <div className="text-4xl font-bold text-center leading-tight">
+                {memo.frontContent ? memo.frontContent : 'English'}
+              </div>
+            )}
           </div>
 
           {/* メタ情報と操作ボタン */}
@@ -107,9 +123,26 @@ const MemoCard: React.FC<MemoCardProps> = ({ memo, onEdit, onDelete }) => {
         <div className={`card-face absolute w-full h-full backface-hidden rotate-y-180 bg-gradient-to-br ${backColorClasses} rounded-lg p-4 flex flex-col text-white shadow-lg`}>
           {/* 裏面コンテンツ - 中央配置・大きなフォント */}
           <div className="flex-1 flex items-center justify-center">
-            <div className="text-3xl font-bold text-center leading-tight">
-              {memo.backContent ? memo.backContent : '日本語'}
-            </div>
+            {memo.tags?.includes('百人一首') ? (
+              /* 百人一首用レイアウト: 上段ふりがな・中段句・下段決まり字 */
+              <div className="text-center w-full space-y-2">
+                {memo.backContent.split('\n').map((line, index) => (
+                  <div key={index} className={
+                    index === 0 ? "text-lg text-opacity-80" :                    // ふりがな
+                    index === 1 ? "text-2xl font-bold" :                         // 句
+                    line.startsWith('決まり字:') ? "text-lg font-bold text-red-200" :  // 決まり字
+                    "text-base font-medium text-opacity-90"                      // その他
+                  }>
+                    {line}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              /* 英検4級用レイアウト: 中央大きな文字 */
+              <div className="text-3xl font-bold text-center leading-tight">
+                {memo.backContent ? memo.backContent : '日本語'}
+              </div>
+            )}
           </div>
 
           {/* メタ情報と操作ボタン */}
