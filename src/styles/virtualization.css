@@ -1,0 +1,82 @@
+/* 仮想スクロール関連のスタイル */
+
+.virtual-grid-container {
+  /* react-windowのコンテナスタイル */
+  width: 100%;
+  position: relative;
+}
+
+/* スクロールバーのスタイル調整 */
+.virtual-grid-container [data-react-window-list] {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+}
+
+.virtual-grid-container [data-react-window-list]::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.virtual-grid-container [data-react-window-list]::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.virtual-grid-container [data-react-window-list]::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5);
+  border-radius: 4px;
+}
+
+.virtual-grid-container [data-react-window-list]::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(156, 163, 175, 0.7);
+}
+
+/* グリッドアイテムのホバー効果 */
+.virtual-grid-container .memo-card-wrapper {
+  transition: transform 0.2s ease-in-out;
+}
+
+.virtual-grid-container .memo-card-wrapper:hover {
+  transform: translateY(-2px);
+}
+
+/* レスポンシブ調整 */
+@media (max-width: 640px) {
+  .virtual-grid-container {
+    /* モバイルでのスクロール最適化 */
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* パフォーマンス最適化 */
+.virtual-grid-container * {
+  /* GPUアクセラレーション */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* ローディング状態のスケルトンアニメーション */
+@keyframes skeleton-loading {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton-card {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+/* スムーズスクロール */
+.virtual-grid-container [data-react-window-list] {
+  scroll-behavior: smooth;
+}
+
+/* フォーカス管理 */
+.virtual-grid-container [data-react-window-list]:focus {
+  outline: 2px solid #7c3aed;
+  outline-offset: 2px;
+}

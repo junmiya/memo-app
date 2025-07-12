@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from '../ui/Button';
+import { AuthButton } from '../auth/AuthButton';
 
 interface HeaderProps {
   onCreateMemo: () => void;
@@ -32,6 +33,7 @@ const Header: React.FC<HeaderProps> = ({ onCreateMemo, memoCount = 0 }) => {
               </svg>
               新しいカード
             </Button>
+            <AuthButton />
           </div>
         </div>
       </div>

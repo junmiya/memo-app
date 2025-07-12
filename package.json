@@ -11,10 +11,16 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.0.1",
+    "@supabase/auth-ui-react": "^0.4.7",
+    "@supabase/auth-ui-shared": "^0.1.8",
+    "@supabase/supabase-js": "^2.50.5",
+    "@types/react-window": "^1.8.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^9.0.4",
     "react-router-dom": "^6.20.1",
+    "react-window": "^1.8.11",
+    "react-window-infinite-loader": "^1.0.10",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
