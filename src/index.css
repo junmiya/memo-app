@@ -1,3 +1,6 @@
+/* 仮想化スタイル */
+@import './styles/virtualization.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

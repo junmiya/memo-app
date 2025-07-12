@@ -5,7 +5,7 @@ import { AuthProvider } from './components/auth/AuthProvider';
 import Layout from './components/layout/Layout';
 import Header from './components/layout/Header';
 import SearchHeader from './components/search/SearchHeader';
-import MemoGrid from './components/memo/MemoGrid';
+import MemoGridContainer from './components/memo/MemoGridContainer';
 import MemoForm from './components/memo/MemoForm';
 import { useMemos } from './hooks/useMemos';
 import { useAppSelector } from './hooks/redux';
@@ -72,7 +72,7 @@ const AppContent: React.FC = () => {
       <SearchHeader />
 
       {/* メモ一覧 */}
-      <MemoGrid
+      <MemoGridContainer
         onEditMemo={openEdit}
         onDeleteMemo={removeMemo}
         onCreateMemo={openCreate}
