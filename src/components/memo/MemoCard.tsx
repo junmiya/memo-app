@@ -108,11 +108,20 @@ const MemoCard: React.FC<MemoCardProps> = ({ memo, onEdit, onDelete }) => {
               </div>
               {memo.tags && memo.tags.length > 0 && (
                 <div className="flex space-x-1">
-                  {memo.tags.slice(0, 2).map((tag, index) => (
-                    <span key={index} className="text-xs bg-white/20 px-1 py-0.5 rounded">
-                      #{tag}
-                    </span>
-                  ))}
+                  {(() => {
+                    // 決まり字数のタグを優先的に表示
+                    const kimarijiTags = memo.tags.filter((tag: string) => tag.startsWith('決まり字:') && tag.includes('文字'));
+                    const otherTags = memo.tags.filter((tag: string) => !tag.startsWith('決まり字:') && tag !== '百人一首');
+                    const displayTags = [...kimarijiTags, ...otherTags].slice(0, 2);
+                    
+                    return displayTags.map((tag: string, index: number) => (
+                      <span key={index} className={`text-xs px-1 py-0.5 rounded ${
+                        tag.includes('文字') ? 'bg-red-200/30 text-red-100 border border-red-300/50' : 'bg-white/20'
+                      }`}>
+                        #{tag}
+                      </span>
+                    ));
+                  })()}
                 </div>
               )}
             </div>
