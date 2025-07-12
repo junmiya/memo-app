@@ -130,7 +130,7 @@ SELECT
   SUM(incorrect_count) as total_incorrect,
   CASE 
     WHEN SUM(correct_count + incorrect_count) > 0 
-    THEN ROUND((SUM(correct_count)::FLOAT / SUM(correct_count + incorrect_count)) * 100, 2)
+    THEN ROUND((SUM(correct_count)::NUMERIC / SUM(correct_count + incorrect_count)) * 100, 2)
     ELSE 0 
   END as accuracy_percentage,
   MAX(last_studied) as last_study_date
@@ -158,7 +158,7 @@ BEGIN
     sr.incorrect_count,
     CASE 
       WHEN (sr.correct_count + sr.incorrect_count) > 0 
-      THEN (sr.correct_count::FLOAT / (sr.correct_count + sr.incorrect_count)) * 100
+      THEN ROUND((sr.correct_count::NUMERIC / (sr.correct_count + sr.incorrect_count)) * 100, 2)
       ELSE 0 
     END as accuracy,
     sr.last_studied,
