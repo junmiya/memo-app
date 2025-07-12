@@ -69,9 +69,9 @@ const MemoCard: React.FC<MemoCardProps> = ({ memo, onEdit, onDelete }) => {
               <div className="text-center w-full space-y-2">
                 {memo.frontContent.split('\n').map((line, index) => (
                   <div key={index} className={
-                    index === 0 ? "text-lg text-opacity-80" :   // ふりがな
-                    index === 1 ? "text-2xl font-bold" :        // 句
-                    "text-base font-medium text-opacity-90"     // 作者
+                    index === 0 ? "text-base text-opacity-80" :   // ふりがな（text-lg → text-base）
+                    index === 1 ? "text-xl font-bold" :           // 句（text-2xl → text-xl）
+                    "text-base font-medium text-opacity-90"       // 作者（変更なし）
                   }>
                     {line}
                   </div>
