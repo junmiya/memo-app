@@ -193,13 +193,13 @@ export const ChatRoom: React.FC<ChatRoomProps> = ({
   }
 
   return (
-    <div className="flex flex-col h-full bg-white">
+    <div className="flex flex-col h-full bg-white" data-testid="chat-room">
       {/* ヘッダー */}
       <div className="border-b border-gray-200 p-4">
         <div className="flex items-center justify-between">
           <div className="flex-1 min-w-0">
             <div className="flex items-center space-x-3">
-              <h2 className="text-lg font-semibold text-gray-900 truncate">
+              <h2 className="text-lg font-semibold text-gray-900 truncate" data-testid="room-title">
                 {room.title}
               </h2>
               

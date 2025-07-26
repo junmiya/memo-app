@@ -134,7 +134,7 @@ export const CreateRoomForm: React.FC<CreateRoomFormProps> = ({
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6" data-testid="room-form">
           {/* 基本設定 */}
           <div className="space-y-4">
             <h3 className="text-lg font-medium text-gray-900">基本設定</h3>
@@ -146,6 +146,7 @@ export const CreateRoomForm: React.FC<CreateRoomFormProps> = ({
               onChange={handleChange}
               error={formErrors.title}
               placeholder="例: プロジェクト相談"
+              data-testid="room-title"
               required
             />
             
@@ -155,6 +156,7 @@ export const CreateRoomForm: React.FC<CreateRoomFormProps> = ({
                 value={formData.visibility}
                 onChange={(e) => handleSelectChange('visibility', e.target.value)}
                 options={visibilityOptions}
+                data-testid="room-visibility"
               />
               
               <Select
@@ -162,6 +164,7 @@ export const CreateRoomForm: React.FC<CreateRoomFormProps> = ({
                 value={formData.chatType}
                 onChange={(e) => handleSelectChange('chatType', e.target.value)}
                 options={chatTypeOptions}
+                data-testid="room-chat-type"
               />
             </div>
             
@@ -175,6 +178,7 @@ export const CreateRoomForm: React.FC<CreateRoomFormProps> = ({
                 rows={3}
                 value={formData.notice}
                 onChange={handleChange}
+                data-testid="room-notice"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 placeholder="ルームの説明やルールを入力してください"
               />
@@ -258,6 +262,7 @@ export const CreateRoomForm: React.FC<CreateRoomFormProps> = ({
               type="submit"
               isLoading={isLoading}
               disabled={isLoading}
+              data-testid="create-room-submit"
             >
               ルームを作成
             </Button>

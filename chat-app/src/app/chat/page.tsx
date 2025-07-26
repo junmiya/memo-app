@@ -167,6 +167,7 @@ export default function ChatPage() {
               <RoomList
                 onRoomSelect={handleRoomSelect}
                 onCreateRoom={() => setViewMode('create')}
+                data-testid="room-list"
               />
             </div>
           )}

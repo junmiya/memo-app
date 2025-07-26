@@ -9,11 +9,13 @@ import { useMockAuth } from '@/features/auth/components/MockAuthProvider';
 interface RoomListProps {
   onRoomSelect?: (room: Room) => void;
   onCreateRoom?: () => void;
+  'data-testid'?: string;
 }
 
 export const RoomList: React.FC<RoomListProps> = ({
   onRoomSelect,
   onCreateRoom,
+  'data-testid': testId,
 }) => {
   const { user } = useMockAuth();
   const { loadRoomList, joinRoom, joinPublicRoom, isLoading, error } = useChatStore();
@@ -96,7 +98,7 @@ export const RoomList: React.FC<RoomListProps> = ({
   }
 
   return (
-    <div className="bg-white shadow rounded-lg">
+    <div className="bg-white shadow rounded-lg" data-testid={testId}>
       <div className="px-4 py-5 sm:p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-medium text-gray-900">チャットルーム</h3>
@@ -115,6 +117,7 @@ export const RoomList: React.FC<RoomListProps> = ({
                 size="sm"
                 onClick={onCreateRoom}
                 className="text-xs"
+                data-testid="create-room-button"
               >
                 + 新規作成
               </Button>
@@ -149,7 +152,7 @@ export const RoomList: React.FC<RoomListProps> = ({
           <div className="space-y-4">
             {/* 参加済みルーム */}
             {rooms.filter(room => room.isParticipant).length > 0 && (
-              <div>
+              <div data-testid="joined-rooms-section">
                 <h4 className="text-sm font-medium text-gray-700 mb-2">参加中のルーム</h4>
                 <div className="space-y-2">
                   {rooms.filter(room => room.isParticipant).map((room) => (
@@ -157,6 +160,7 @@ export const RoomList: React.FC<RoomListProps> = ({
                       key={room.roomId}
                       onClick={() => handleRoomClick(room)}
                       className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-colors"
+                      data-testid={`joined-room-${room.title}`}
                     >
                 <div className="flex items-start justify-between">
                   <div className="flex-1 min-w-0">
@@ -216,13 +220,14 @@ export const RoomList: React.FC<RoomListProps> = ({
 
             {/* 参加可能な公開ルーム */}
             {rooms.filter(room => !room.isParticipant && room.visibility === 'public').length > 0 && (
-              <div>
+              <div data-testid="public-rooms-section">
                 <h4 className="text-sm font-medium text-gray-700 mb-2">参加可能な公開ルーム</h4>
                 <div className="space-y-2">
                   {rooms.filter(room => !room.isParticipant && room.visibility === 'public').map((room) => (
                     <div
                       key={room.roomId}
                       className="p-4 border border-gray-200 rounded-lg hover:border-green-300 hover:bg-green-50 transition-colors"
+                      data-testid={`public-room-${room.title}`}
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1 min-w-0">
@@ -260,6 +265,7 @@ export const RoomList: React.FC<RoomListProps> = ({
                               handleJoinPublicRoom(room);
                             }}
                             className="text-xs bg-green-50 text-green-700 border-green-200 hover:bg-green-100"
+                            data-testid={`join-room-${room.title}`}
                           >
                             参加
                           </Button>

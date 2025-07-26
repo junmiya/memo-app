@@ -12,7 +12,10 @@
     "emulators:import": "firebase emulators:start --import=./firebase-export",
     "seed-data": "node scripts/seed-data.js",
     "dev:local": "concurrently \"npm run emulators\" \"npm run dev\"",
-    "setup:local": "npm run emulators & sleep 5 && npm run seed-data"
+    "setup:local": "npm run emulators & sleep 5 && npm run seed-data",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug"
   },
   "dependencies": {
     "@firebase/auth": "^1.11.0",
@@ -29,6 +32,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.54.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

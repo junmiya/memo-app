@@ -102,6 +102,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           onChange={handleChange}
           error={formErrors.email}
           placeholder="example@email.com"
+          data-testid="email"
           required
         />
         
@@ -113,12 +114,14 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           onChange={handleChange}
           error={formErrors.password}
           placeholder="パスワードを入力"
+          data-testid="password"
           required
         />
         
         <Button
           type="submit"
           className="w-full"
+          data-testid="login-button"
           isLoading={isLoading}
           disabled={isLoading}
         >

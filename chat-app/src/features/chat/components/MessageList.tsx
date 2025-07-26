@@ -112,7 +112,7 @@ export const MessageList: React.FC<MessageListProps> = ({
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+    <div className="flex-1 overflow-y-auto p-4 space-y-4" data-testid="message-list">
       {messages.filter(message => !message.isDeleted).map((message, index) => {
         const previousMessage = index > 0 ? messages[index - 1] : undefined;
         const isCurrentUser = message.senderUid === currentUser?.uid;
