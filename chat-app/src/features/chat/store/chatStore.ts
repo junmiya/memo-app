@@ -17,6 +17,7 @@ interface ChatActions {
   // Room Management
   createRoom: (roomData: CreateRoomData, userId: string) => Promise<Room>;
   joinRoom: (roomId: string) => Promise<void>;
+  joinPublicRoom: (roomId: string, userId: string) => Promise<void>;
   leaveRoom: () => void;
   updateRoom: (roomId: string, updates: Partial<Room>) => Promise<void>;
   
@@ -284,6 +285,51 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     }
   },
 
+  joinPublicRoom: async (roomId: string, userId: string) => {
+    const { setError } = get();
+    
+    try {
+      setError(null);
+      
+      // ルームを検索
+      const roomIndex = MOCK_ROOMS.findIndex(r => r.roomId === roomId);
+      if (roomIndex === -1) {
+        throw new Error('Room not found');
+      }
+      
+      const room = MOCK_ROOMS[roomIndex];
+      
+      // 公開ルームかチェック
+      if (room.visibility !== 'public') {
+        throw new Error('このルームは非公開です');
+      }
+      
+      // 既に参加しているかチェック
+      if (room.participants.includes(userId)) {
+        console.log('User already participant in room:', roomId);
+        return;
+      }
+      
+      // 参加者リストに追加
+      MOCK_ROOMS[roomIndex] = {
+        ...room,
+        participants: [...room.participants, userId]
+      };
+      
+      // Socket.ioで参加を通知
+      if (socketService.isConnected()) {
+        socketService.joinRoom(roomId);
+      }
+      
+      console.log('User joined public room:', userId, 'to room:', roomId);
+      
+    } catch (error) {
+      console.error('Failed to join public room:', error);
+      setError(error instanceof Error ? error.message : '公開ルーム参加に失敗しました');
+      throw error;
+    }
+  },
+
   // Message Management
   sendMessage: async (messageData: MessageInputData) => {
     const { setError, messages } = get();
@@ -531,20 +577,28 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     try {
       setError(null);
       
-      // モックルームリストを生成
-      const roomList: RoomListItem[] = MOCK_ROOMS.map(room => ({
-        roomId: room.roomId,
-        title: room.title,
-        visibility: room.visibility,
-        chatType: room.chatType,
-        participantCount: room.participants.length,
-        lastMessageAt: MOCK_MESSAGES[room.roomId]?.slice(-1)[0]?.createdAt,
-        lastMessageText: MOCK_MESSAGES[room.roomId]?.slice(-1)[0]?.text,
-        isOwner: room.ownerUid === userId,
-        hasUnreadMessages: false, // 実装時にはちゃんとした未読管理
-      }));
+      // 全ルームから表示対象を決定
+      const roomList: RoomListItem[] = MOCK_ROOMS
+        .filter(room => {
+          // 以下のルームを表示:
+          // 1. 自分が参加しているルーム
+          // 2. 公開ルーム（参加していなくても表示）
+          return room.participants.includes(userId) || room.visibility === 'public';
+        })
+        .map(room => ({
+          roomId: room.roomId,
+          title: room.title,
+          visibility: room.visibility,
+          chatType: room.chatType,
+          participantCount: room.participants.length,
+          lastMessageAt: MOCK_MESSAGES[room.roomId]?.slice(-1)[0]?.createdAt,
+          lastMessageText: MOCK_MESSAGES[room.roomId]?.slice(-1)[0]?.text,
+          isOwner: room.ownerUid === userId,
+          isParticipant: room.participants.includes(userId),
+          hasUnreadMessages: false, // 実装時にはちゃんとした未読管理
+        }));
       
-      console.log('Room list loaded:', roomList.length);
+      console.log('Room list loaded:', roomList.length, 'rooms for user:', userId);
       return roomList;
       
     } catch (error) {

@@ -177,5 +177,6 @@ export interface RoomListItem {
   lastMessageAt?: Timestamp;
   lastMessageText?: string;
   isOwner: boolean;
+  isParticipant: boolean;
   hasUnreadMessages: boolean;
 }

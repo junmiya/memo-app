@@ -16,7 +16,7 @@ export const RoomList: React.FC<RoomListProps> = ({
   onCreateRoom,
 }) => {
   const { user } = useMockAuth();
-  const { loadRoomList, joinRoom, isLoading, error } = useChatStore();
+  const { loadRoomList, joinRoom, joinPublicRoom, isLoading, error } = useChatStore();
   const [rooms, setRooms] = useState<RoomListItem[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -51,6 +51,18 @@ export const RoomList: React.FC<RoomListProps> = ({
       }
     } catch (error) {
       console.error('Failed to join room:', error);
+    }
+  };
+
+  const handleJoinPublicRoom = async (room: RoomListItem) => {
+    if (!user) return;
+    
+    try {
+      await joinPublicRoom(room.roomId, user.uid);
+      // ルームリストを更新
+      await loadRooms();
+    } catch (error) {
+      console.error('Failed to join public room:', error);
     }
   };
 
@@ -134,13 +146,18 @@ export const RoomList: React.FC<RoomListProps> = ({
             )}
           </div>
         ) : (
-          <div className="space-y-2">
-            {rooms.map((room) => (
-              <div
-                key={room.roomId}
-                onClick={() => handleRoomClick(room)}
-                className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-colors"
-              >
+          <div className="space-y-4">
+            {/* 参加済みルーム */}
+            {rooms.filter(room => room.isParticipant).length > 0 && (
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">参加中のルーム</h4>
+                <div className="space-y-2">
+                  {rooms.filter(room => room.isParticipant).map((room) => (
+                    <div
+                      key={room.roomId}
+                      onClick={() => handleRoomClick(room)}
+                      className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-colors"
+                    >
                 <div className="flex items-start justify-between">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center space-x-2 mb-1">
@@ -193,6 +210,66 @@ export const RoomList: React.FC<RoomListProps> = ({
                 </div>
               </div>
             ))}
+                  </div>
+                </div>
+              )}
+
+            {/* 参加可能な公開ルーム */}
+            {rooms.filter(room => !room.isParticipant && room.visibility === 'public').length > 0 && (
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">参加可能な公開ルーム</h4>
+                <div className="space-y-2">
+                  {rooms.filter(room => !room.isParticipant && room.visibility === 'public').map((room) => (
+                    <div
+                      key={room.roomId}
+                      className="p-4 border border-gray-200 rounded-lg hover:border-green-300 hover:bg-green-50 transition-colors"
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center space-x-2 mb-1">
+                            <h4 className="text-sm font-medium text-gray-900 truncate">
+                              {room.title}
+                            </h4>
+                            <div className="flex space-x-1">
+                              <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                              {room.chatType === '1v1' ? (
+                                <span className="text-xs bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded">1v1</span>
+                              ) : (
+                                <span className="text-xs bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded">1vN</span>
+                              )}
+                            </div>
+                          </div>
+                          
+                          <p className="text-sm text-gray-600 mb-2">
+                            {formatLastMessage(room.lastMessageText)}
+                          </p>
+                          
+                          <div className="flex items-center justify-between text-xs text-gray-500">
+                            <span>{room.participantCount}名参加</span>
+                          </div>
+                        </div>
+                        
+                        <div className="ml-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleJoinPublicRoom(room);
+                            }}
+                            className="text-xs bg-green-50 text-green-700 border-green-200 hover:bg-green-100"
+                          >
+                            参加
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
