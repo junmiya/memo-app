@@ -61,8 +61,75 @@ interface ChatActions {
 
 type ChatStore = ChatState & ChatActions;
 
-// モックデータ（開発用）
-const MOCK_ROOMS: Room[] = [
+// localStorage管理関数
+const STORAGE_KEY = 'chat-app-mock-rooms';
+const STORAGE_MESSAGES_KEY = 'chat-app-mock-messages';
+
+const getStoredRooms = (): Room[] => {
+  if (typeof window === 'undefined') return DEFAULT_ROOMS; // SSR対応
+  
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const parsedRooms = JSON.parse(stored);
+      // Timestamp型の復元（Date文字列からTimestampオブジェクトに変換）
+      return parsedRooms.map((room: any) => ({
+        ...room,
+        createdAt: new Date(room.createdAt) as unknown as Timestamp,
+      }));
+    }
+  } catch (error) {
+    console.error('Failed to load rooms from localStorage:', error);
+  }
+  return DEFAULT_ROOMS;
+};
+
+const saveRoomsToStorage = (rooms: Room[]): void => {
+  if (typeof window === 'undefined') return; // SSR対応
+  
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms));
+  } catch (error) {
+    console.error('Failed to save rooms to localStorage:', error);
+  }
+};
+
+const getStoredMessages = (): Record<string, Message[]> => {
+  if (typeof window === 'undefined') return DEFAULT_MESSAGES; // SSR対応
+  
+  try {
+    const stored = localStorage.getItem(STORAGE_MESSAGES_KEY);
+    if (stored) {
+      const parsedMessages = JSON.parse(stored);
+      // Timestamp型の復元
+      const restoredMessages: Record<string, Message[]> = {};
+      Object.keys(parsedMessages).forEach(roomId => {
+        restoredMessages[roomId] = parsedMessages[roomId].map((msg: any) => ({
+          ...msg,
+          createdAt: new Date(msg.createdAt) as unknown as Timestamp,
+          ...(msg.deletedAt && { deletedAt: new Date(msg.deletedAt) as unknown as Timestamp }),
+        }));
+      });
+      return restoredMessages;
+    }
+  } catch (error) {
+    console.error('Failed to load messages from localStorage:', error);
+  }
+  return DEFAULT_MESSAGES;
+};
+
+const saveMessagesToStorage = (messages: Record<string, Message[]>): void => {
+  if (typeof window === 'undefined') return; // SSR対応
+  
+  try {
+    localStorage.setItem(STORAGE_MESSAGES_KEY, JSON.stringify(messages));
+  } catch (error) {
+    console.error('Failed to save messages to localStorage:', error);
+  }
+};
+
+// デフォルトデータ（初期データ）
+const DEFAULT_ROOMS: Room[] = [
   {
     roomId: 'room-1',
     ownerUid: 'mock-user-1',
@@ -101,7 +168,7 @@ const MOCK_ROOMS: Room[] = [
   },
 ];
 
-const MOCK_MESSAGES: Record<string, Message[]> = {
+const DEFAULT_MESSAGES: Record<string, Message[]> = {
   'room-1': [
     {
       msgId: 'msg-1',
@@ -147,6 +214,10 @@ const MOCK_MESSAGES: Record<string, Message[]> = {
 // モデレーション履歴（開発用）
 const MOCK_MODERATION_ACTIONS: ModerationAction[] = [];
 
+// 動的データ（localStorage連携）
+let MOCK_ROOMS = getStoredRooms();
+let MOCK_MESSAGES = getStoredMessages();
+
 export const useChatStore = create<ChatStore>((set, get) => ({
   // Initial State
   currentRoom: null,
@@ -188,6 +259,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       // モックデータに追加
       MOCK_ROOMS.push(newRoom);
       
+      // localStorageに保存
+      saveRoomsToStorage(MOCK_ROOMS);
+      
       console.log('Room created successfully:', newRoom.roomId);
       return newRoom;
       
@@ -206,6 +280,10 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     try {
       setLoading(true);
       setError(null);
+      
+      // localStorageから最新データを読み込み
+      MOCK_ROOMS = getStoredRooms();
+      MOCK_MESSAGES = getStoredMessages();
       
       // ルーム情報を取得（モック実装）
       const room = MOCK_ROOMS.find(r => r.roomId === roomId);
@@ -270,6 +348,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       if (roomIndex !== -1) {
         MOCK_ROOMS[roomIndex] = { ...MOCK_ROOMS[roomIndex], ...updates };
         
+        // localStorageに保存
+        saveRoomsToStorage(MOCK_ROOMS);
+        
         // 現在のルームを更新
         if (currentRoom?.roomId === roomId) {
           setCurrentRoom(MOCK_ROOMS[roomIndex]);
@@ -315,6 +396,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         ...room,
         participants: [...room.participants, userId]
       };
+      
+      // localStorageに保存
+      saveRoomsToStorage(MOCK_ROOMS);
       
       // Socket.ioで参加を通知
       if (socketService.isConnected()) {
@@ -367,6 +451,10 @@ export const useChatStore = create<ChatStore>((set, get) => ({
             MOCK_MESSAGES[messageData.roomId] = [];
           }
           MOCK_MESSAGES[messageData.roomId].push(newMessage);
+          
+          // localStorageに保存
+          saveMessagesToStorage(MOCK_MESSAGES);
+          
           console.log('[Mock Mode] Message added to MOCK_MESSAGES:', MOCK_MESSAGES[messageData.roomId].length, 'messages');
         }
         // 実モードでは、message_receivedイベントで状態更新されるため、ここでは何もしない
@@ -380,6 +468,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
           MOCK_MESSAGES[messageData.roomId] = [];
         }
         MOCK_MESSAGES[messageData.roomId].push(newMessage);
+        
+        // localStorageに保存
+        saveMessagesToStorage(MOCK_MESSAGES);
       }
       
       console.log('Message sent:', newMessage.msgId);
@@ -577,6 +668,10 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     try {
       setError(null);
       
+      // localStorageから最新データを読み込み
+      MOCK_ROOMS = getStoredRooms();
+      MOCK_MESSAGES = getStoredMessages();
+      
       // 全ルームから表示対象を決定
       const roomList: RoomListItem[] = MOCK_ROOMS
         .filter(room => {
@@ -625,6 +720,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         const oldNotice = MOCK_ROOMS[roomIndex].notice;
         MOCK_ROOMS[roomIndex] = { ...MOCK_ROOMS[roomIndex], notice };
         
+        // localStorageに保存
+        saveRoomsToStorage(MOCK_ROOMS);
+        
         // モデレーション履歴に記録
         const action: ModerationAction = {
           actionId: uuidv4(),
@@ -663,6 +761,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         MOCK_ROOMS[roomIndex].participants = MOCK_ROOMS[roomIndex].participants.filter(
           uid => uid !== targetUserId
         );
+        
+        // localStorageに保存
+        saveRoomsToStorage(MOCK_ROOMS);
         
         // Socket.ioでユーザー退出を通知
         if (socketService.isConnected()) {
@@ -704,6 +805,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       if (roomIndex !== -1) {
         MOCK_ROOMS[roomIndex] = { ...MOCK_ROOMS[roomIndex], isClosed: true };
         
+        // localStorageに保存
+        saveRoomsToStorage(MOCK_ROOMS);
+        
         // Socket.ioでルーム閉鎖を通知
         if (socketService.isConnected()) {
           socketService.emit('close_room', { roomId, reason });
@@ -744,6 +848,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       const roomIndex = MOCK_ROOMS.findIndex(r => r.roomId === roomId);
       if (roomIndex !== -1) {
         MOCK_ROOMS[roomIndex] = { ...MOCK_ROOMS[roomIndex], isClosed: false };
+        
+        // localStorageに保存
+        saveRoomsToStorage(MOCK_ROOMS);
         
         // Socket.ioでルーム再開を通知
         if (socketService.isConnected()) {
@@ -787,6 +894,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
           isDeleted: true,
           deletedAt: new Date() as unknown as Timestamp,
         }));
+        
+        // localStorageに保存
+        saveMessagesToStorage(MOCK_MESSAGES);
       }
       
       // Socket.ioでメッセージクリアを通知
